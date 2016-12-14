@@ -13,6 +13,7 @@ type Config struct {
 	Debug        bool
 	DatabaseDir  string
 	DatabaseFile string
+	Multiuser    bool
 }
 
 func New() *Config {
@@ -21,6 +22,9 @@ func New() *Config {
 	flag.StringVar(&c.HTTPAddr, "bind", "localhost:6060", "Address and port to bind the HTTP server too")
 	flag.BoolVar(&c.Debug, "debug", false, "Enable debugging")
 	flag.StringVar(&c.DatabaseDir, "database-dir", fmt.Sprintf("%s/.config/funnel", os.Getenv("HOME")), "Path to the sqlite database")
+	flag.BoolVar(&c.Multiuser, "multiuser", false, "Enable multiuser")
+
+	flag.Parse()
 
 	if _, err := os.Stat(c.DatabaseDir); err != nil {
 		if os.IsNotExist(err) {
@@ -34,8 +38,6 @@ func New() *Config {
 	}
 
 	c.DatabaseFile = fmt.Sprintf("%s/%s", c.DatabaseDir, DatabaseFilename)
-
-	flag.Parse()
 
 	return c
 }

@@ -17,9 +17,12 @@ type Funnel struct {
 }
 
 func New(c *config.Config, db *data.FunnelDB) *Funnel {
-	f := &Funnel{config: c}
-	f.router = mux.NewRouter()
-	f.db = db
+	f := &Funnel{
+		config: c,
+		router: mux.NewRouter(),
+		db:     db,
+	}
+
 	f.init()
 
 	return f
@@ -28,11 +31,30 @@ func New(c *config.Config, db *data.FunnelDB) *Funnel {
 func (f *Funnel) init() {
 	all := alice.New(LoggingHandler)
 
+	initTemplates(f)
+
 	f.router.Handle("/", all.Then(errorHandler(f.IndexHandler))).Methods("GET").Name("index")
 
 	feedsrouter := f.router.PathPrefix("/feeds").Subrouter()
-	feedsrouter.Handle("/new", all.Then(errorHandler(f.NewFeedHandler))).Methods("GET").Name("feeds-new")
-	feedsrouter.Handle("/create", all.Then(errorHandler(f.CreateFeedHandler))).Methods("POST").Name("feeds-create")
+	feedsrouter.Handle("/", all.Then(errorHandler(f.ListFeedHandler))).
+		Methods("GET").
+		Name("feed-index")
+	feedsrouter.Handle("/new", all.Then(errorHandler(f.NewFeedHandler))).
+		Methods("GET").
+		Name("feeds-new")
+	feedsrouter.Handle("/create", all.Then(errorHandler(f.CreateFeedHandler))).
+		Methods("POST").
+		Name("feeds-create")
+	feedsrouter.Handle("/{id:[0-9]+}", all.Then(errorHandler(f.ViewFeedHandler))).
+		Methods("GET").
+		Name("feeds-view")
+
+	f.router.PathPrefix("/static").Handler(staticHandler)
+
+	f.router.NotFoundHandler = errorHandler(func(w http.ResponseWriter, r *http.Request) error {
+		w.WriteHeader(http.StatusNotFound)
+		return renderTemplate(w, "404", nil)
+	})
 }
 
 func (f *Funnel) ServeHTTP(w http.ResponseWriter, r *http.Request) {

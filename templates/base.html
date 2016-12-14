@@ -84,10 +84,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
-          {{ template "sidebar" }}
+          {{ template "sidebar" . }}
         </div>
-        <div class="col-sm-9 col-md-10 main">
-          {{ template "content" }}
+        <div class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 main">
+          {{ template "content" . }}
         </div>
       </div>
     </div>

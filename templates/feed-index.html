@@ -1,0 +1,13 @@
+{{ define "content" }}
+  <h2>Feeds</h2>
+  {{ range $feed := .Feeds }}
+  <div class="row">
+    <div class="col-xs-9">
+      {{ $feed.Title }}
+    </div>
+    <div class="col-xs-3">
+      <button>Subscribe</button>
+    </div>
+  </div>
+  {{ end }}
+{{ end }}

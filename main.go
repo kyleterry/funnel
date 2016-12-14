@@ -1,3 +1,5 @@
+//go:generate go-bindata -o ./web/bindata.go -pkg web templates/... static/...
+
 package main
 
 import (
@@ -13,16 +15,18 @@ import (
 func main() {
 	c := config.New()
 
-	db, err := data.New(c.DatabaseFile)
+	db, err := data.New(c.DatabaseFile, c.Debug)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	log.Println("Bringing inline worker online")
 	w := worker.New(c, db)
 	go w.Start()
 
 	funnel := web.New(c, db)
 
+	log.Println("Starting web")
 	log.Printf("Listening on http://%s\n", c.HTTPAddr)
 	if err := http.ListenAndServe(c.HTTPAddr, funnel); err != nil {
 		log.Fatal(err)

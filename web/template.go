@@ -8,21 +8,27 @@ import (
 	"github.com/oxtoacart/bpool"
 )
 
-var bufpool = bpool.NewBufferPool(64)
+var (
+	bufpool       = bpool.NewBufferPool(64)
+	templateFuncs = template.FuncMap{}
+	templateMap   = map[string]*template.Template{}
+)
 
-var templateMap = map[string]*template.Template{
-	"index":    createTemplate("templates/base.html", "templates/sidebar.html", "templates/index.html"),
-	"feed-new": createTemplate("templates/base.html", "templates/sidebar.html", "templates/feed-new.html"),
-	"setup":    createTemplate("templates/noauth-base.html", "templates/setup.html"),
-	"login":    createTemplate("templates/noauth-base.html", "templates/login.html"),
-	"404":      createTemplate("templates/noauth-base.html", "templates/404.html"),
-}
+func initTemplates(f *Funnel) {
+	templateFuncs = template.FuncMap{
+		"reverse":    f.reverse,
+		"newcontext": newcontext,
+	}
 
-var templateFuncs = template.FuncMap{
-	"reverse":    reverse,
-	"newcontext": newcontext,
-	// "isyoutube":  isYoutube,
-	// "youtubevid": youtubevid,
+	templateMap = map[string]*template.Template{
+		"index":      createTemplate("templates/base.html", "templates/sidebar.html", "templates/index.html"),
+		"feed-index": createTemplate("templates/base.html", "templates/sidebar.html", "templates/feed-index.html"),
+		"feed-new":   createTemplate("templates/base.html", "templates/sidebar.html", "templates/feed-new.html"),
+		"feed-view":  createTemplate("templates/base.html", "templates/sidebar.html", "templates/feed-view.html"),
+		"setup":      createTemplate("templates/noauth-base.html", "templates/setup.html"),
+		"login":      createTemplate("templates/noauth-base.html", "templates/login.html"),
+		"404":        createTemplate("templates/noauth-base.html", "templates/404.html"),
+	}
 }
 
 func renderTemplate(w http.ResponseWriter, name string, data interface{}) error {
@@ -41,7 +47,9 @@ func renderTemplate(w http.ResponseWriter, name string, data interface{}) error 
 
 	// TODO(kt): Make this changeable when making the API
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	buf.WriteTo(w)
+	if _, err := buf.WriteTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 

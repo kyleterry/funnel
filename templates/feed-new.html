@@ -1,0 +1,10 @@
+{{ define "content" }}
+<form method="post", action="{{ reverse "feeds-create" }}">
+  <div class="form-group">
+    <label for="url">URL</label>
+    <input type="url" name="url" class="form-control" id="url" aria-describedby="urlHelp" placeholder="https://example.com/feed.xml">
+    <small id="urlHelp" class="form-text text-muted">RSS and Atom supported.</small>
+  </div>
+  <button type="submit" class="btn btn-primary">Subscribe</button>
+</form>
+{{ end }}

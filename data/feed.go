@@ -6,11 +6,13 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+// Feed is the a url pointing to an RSS or Atom feed
 type Feed struct {
 	gorm.Model
 
 	Title        string
-	URL          string
+	URL          string `gorm:"not null:unique"`
+	Description  string
 	SiteURL      string
 	Favicon      string
 	Domain       string
@@ -19,5 +21,6 @@ type Feed struct {
 	HotLinking   bool
 	Unread       int
 	LastFetch    time.Time
-	Categories   []Category `gorm:"many2many:feed_categories;"`
+	AddedByID    uint
+	AddedBy      *User
 }

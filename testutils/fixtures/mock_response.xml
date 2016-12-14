@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+        <title>Example RSS</title>
+        <link>http://example.com/feed.rss</link>
+        <description>Such a smooooooth description</description>
+        <item>
+            <title>Hi</title>
+            <link>http://www.w3schools.com/xml/xml_rss.asp</link>
+            <description>New RSS tutorial on W3Schools</description>
+        </item>
+        <item>
+            <title>Hey</title>
+            <link>http://www.w3schools.com/xml</link>
+            <description>New XML tutorial on W3Schools</description>
+        </item>
+    </channel>
+</rss>

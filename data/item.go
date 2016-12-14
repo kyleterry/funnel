@@ -6,16 +6,16 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+// Item is a single feed item. This is usually a post belonging to the feed
 type Item struct {
 	gorm.Model
 
-	FeedID      uint
 	Feed        *Feed
+	FeedID      uint `gorm:"index"`
 	UID         string
 	Title       string
 	Author      string
 	Description string
 	Link        string
-	Saved       bool
-	ReadTime    time.Time
+	PostedAt    time.Time
 }

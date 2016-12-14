@@ -1,0 +1,15 @@
+language: go
+dist: latest
+go:
+  - 1.7
+  - tip
+install:
+  - :
+script: make test
+notifications:
+  email:
+    recipients:
+      - kyle@kyleterry.com
+    on_success: change
+    on_failure: [always|never|change]
+

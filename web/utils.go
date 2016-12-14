@@ -6,12 +6,13 @@ import (
 	"log"
 )
 
-func reverse(name string, params ...interface{}) string {
+func (f Funnel) reverse(name string, params ...interface{}) string {
 	s := make([]string, len(params))
 	for _, param := range params {
 		s = append(s, fmt.Sprint(param))
 	}
-	url, err := router.GetRoute(name).URL(s...)
+
+	url, err := f.router.GetRoute(name).URL(s...)
 	if err != nil {
 		log.Println(err)
 	}
