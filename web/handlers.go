@@ -71,3 +71,8 @@ func (f Funnel) CreateFeedHandler(w http.ResponseWriter, r *http.Request) error 
 func (f Funnel) ViewFeedHandler(w http.ResponseWriter, r *http.Request) error {
 	return renderTemplate(w, "feed-view", nil)
 }
+
+func (f Funnel) TimelineHandler(w http.ResponseWriter, r *http.Request) error {
+	itemService := NewItemService(f.db)
+	items, err := itemService.GetAllForUser()
+}
