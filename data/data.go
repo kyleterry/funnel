@@ -2,7 +2,9 @@ package data
 
 import (
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite" // Needed for the sqlite driver
+	"github.com/kyleterry/funnel/config"
+	_ "github.com/lib/pq"           // Needed for the postgres driver
+	_ "github.com/mattn/go-sqlite3" // Needed for the sqlite driver
 )
 
 // FunnelDB wraps a gorm.DB connection and provides a useful interface for
@@ -12,13 +14,13 @@ type FunnelDB struct {
 }
 
 // New returns a new instance of FunnelDB or an error
-func New(path string, debug bool) (*FunnelDB, error) {
-	conn, err := gorm.Open("sqlite3", path)
+func New(conf *config.Config) (*FunnelDB, error) {
+	conn, err := gorm.Open(conf.DatabaseEngine, conf.ConnectionString)
 	if err != nil {
 		return nil, err
 	}
 
-	conn.LogMode(debug)
+	conn.LogMode(conf.Debug)
 
 	fdb := &FunnelDB{
 		Conn: conn,

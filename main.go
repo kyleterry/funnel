@@ -13,9 +13,13 @@ import (
 )
 
 func main() {
-	c := config.New()
+	c, err := config.New()
 
-	db, err := data.New(c.DatabaseFile, c.Debug)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db, err := data.New(c)
 	if err != nil {
 		log.Fatal(err)
 	}

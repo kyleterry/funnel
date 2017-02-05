@@ -3,4 +3,6 @@ build:
 	go build
 
 test:
-	@./scripts/test.sh
+	@./scripts/run-tests
+
+.PHONY: build test

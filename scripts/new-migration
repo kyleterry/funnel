@@ -1,0 +1,18 @@
+#!/bin/bash
+
+SCRIPTS_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+PROJECT_ROOT=${SCRIPTS_DIR%/*}
+MIGRATIONS_DIR="${PROJECT_ROOT}/migrations"
+
+if [[ ${#} -lt 1 ]]; then
+    echo "Usage: new-migration name_of_migration"
+    exit 1
+fi
+
+function create_migration {
+    migration_path="${MIGRATIONS_DIR}/$(date +%s)-${1}.sql"
+    touch ${migration_path}
+    echo ${migration_path}
+}
+
+create_migration ${*//[ _]/-} # replace ' ' and _ with -
